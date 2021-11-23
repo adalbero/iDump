@@ -46,6 +46,7 @@ public class ShellCommand extends AppCommand {
 				executeCommand(line);
 			} else {
 				AppConsole.printf();
+				AppConsole.printf("iDump SHELL - try: HELP for help and EXIT to exit.");
 				loop();
 			}
 		} finally {
