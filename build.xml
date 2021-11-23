@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="deploy" name="iDump">
+    <property name="dir.deploy" value="C:\\Programs\\iDump"/>
+    <property name="dir.buildfile" value="dist"/>
+    <property name="dir.workspace" value="."/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+	
+    <target name="build">
+        <jar destfile="${dir.jarfile}/iDump.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="io.adalbero.tool.idump.AppMain"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.workspace}/bin" excludes="dfc.properties"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/activation-1.1.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/aspectjrt.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/commons-lang-2.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/log4j.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/xml-apis.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/lib/dfc.jar"/>
+        </jar>
+		<copy todir="${dir.jarfile}">
+			<fileset dir="${dir.workspace}/bin" includes="dfc.properties"/>
+		</copy>
+    </target>
+	
+	<target name="deploy" depends="build">
+		<copy todir="${dir.deploy}">
+			<fileset dir="${dir.jarfile}" includes="*.jar,*.properties"/>
+		</copy>
+	</target>
+	
+</project>
