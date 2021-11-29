@@ -5,7 +5,6 @@ import com.documentum.fc.common.DfException;
 import io.adalbero.tool.idump.AppCommand;
 import io.adalbero.tool.idump.AppConsole;
 import io.adalbero.tool.idump.util.AppDctmUtil;
-import io.adalbero.tool.idump.util.AppStringUtil;
 
 public class DumpCommand extends AppCommand {
 	public static final String NAME = "DUMP";
@@ -30,15 +29,14 @@ public class DumpCommand extends AppCommand {
 	public Object execute() throws DfException {
 		Object result = null;
 
-		String line = cmdLine.getCommandLine();
-		String qualification = AppStringUtil.replace(line, "^DUMP ", "");
+		String qualification = cmdLine.getArgumentTilEnd(1);
 
 		result = AppDctmUtil.getObject(context.dmSession, qualification);
-		
+
 		if (result == null) {
-			result = "[no Object found]";
+			throw new DfException("[Object not found] " + qualification);
 		}
-		
+
 		return result;
 	}
 }

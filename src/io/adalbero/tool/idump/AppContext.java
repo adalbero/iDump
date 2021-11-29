@@ -4,4 +4,5 @@ import com.documentum.fc.client.IDfSession;
 
 public class AppContext {
 	public IDfSession dmSession;
+	public String pwd = "/";
 }

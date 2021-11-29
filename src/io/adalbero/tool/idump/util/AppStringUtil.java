@@ -1,5 +1,7 @@
 package io.adalbero.tool.idump.util;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -59,5 +61,19 @@ public class AppStringUtil {
 			return str;
 		}
 
+	}
+
+	public static String getFullPath(String base, String path) {
+
+		path = AppStringUtil.isEmpty(path) ? "" : path;
+
+		Path fullPath = Paths.get(base);
+		fullPath = fullPath.resolve(path);
+		fullPath = fullPath.normalize();
+
+		String result = fullPath.toString();
+		result = result.replaceAll("\\\\", "/");
+
+		return result;
 	}
 }

@@ -92,6 +92,13 @@ public class AppConsole {
 	public static void printResult(Object obj) throws DfException {
 		if (obj == null) {
 			// noop
+		} else if (obj instanceof Object[]) {
+			for (Object o : (Object[]) obj) {
+				if (o != null) {
+					printResult(o);
+					printf();
+				}
+			}
 		} else if (obj instanceof String) {
 			printResult((String) obj);
 		} else if (obj instanceof IDfTypedObject) {

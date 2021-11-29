@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="lib/dfc.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/configservice-api.jar"/>
+	<classpathentry kind="lib" path="lib/configservice-impl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

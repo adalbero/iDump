@@ -17,6 +17,8 @@ public class ShellCommand extends AppCommand {
 
 	public static final String NAME = "SHELL";
 
+	private String credential;
+
 	@Override
 	public String getName() {
 		return NAME;
@@ -38,6 +40,7 @@ public class ShellCommand extends AppCommand {
 
 			this.context = new AppContext();
 			this.context.dmSession = dmSession;
+			this.credential = getCredential();
 
 			String line = cmdLine.getArgumentTilEnd(4);
 			line = AppStringUtil.unquote(line);
@@ -61,12 +64,10 @@ public class ShellCommand extends AppCommand {
 	}
 
 	private Object loop() throws DfException {
-		String credential = getCredential();
 		Object result = null;
 
 		while (true) {
-			AppConsole.printf();
-			String line = AppConsole.prompt(credential);
+			String line = prompt();
 			if (StringUtils.isNotEmpty(line)) {
 				if (AppStringUtil.equals(line, "QUIT|EXIT|BYE")) {
 					break;
@@ -77,6 +78,14 @@ public class ShellCommand extends AppCommand {
 		}
 
 		return result;
+	}
+
+	private String prompt() {
+		AppConsole.printf();
+		String msg = String.format("[%s] %s ", credential, this.context.pwd);
+		String line = AppConsole.prompt(msg);
+
+		return line;
 	}
 
 	private Object executeCommand(String line) throws DfException {

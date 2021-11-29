@@ -1,16 +1,27 @@
 package io.adalbero.tool.idump.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import com.documentum.com.DfClientX;
 import com.documentum.fc.client.DfClient;
 import com.documentum.fc.client.DfQuery;
 import com.documentum.fc.client.IDfClient;
 import com.documentum.fc.client.IDfCollection;
+import com.documentum.fc.client.IDfFolder;
 import com.documentum.fc.client.IDfQuery;
 import com.documentum.fc.client.IDfSession;
+import com.documentum.fc.client.IDfSysObject;
 import com.documentum.fc.client.IDfTypedObject;
 import com.documentum.fc.client.IDfUser;
 import com.documentum.fc.common.DfException;
 import com.documentum.fc.common.DfId;
 import com.documentum.fc.common.DfLoginInfo;
+import com.documentum.fc.common.IDfList;
+import com.documentum.operations.IDfExportNode;
+import com.documentum.operations.IDfExportOperation;
+import com.documentum.operations.IDfOperationError;
 
 import io.adalbero.tool.idump.AppTable;
 
@@ -119,7 +130,51 @@ public class AppDctmUtil {
 		} else if (AppStringUtil.equals(type, "dm_group")) {
 			return "r_object_id, group_name, i_all_users_names";
 		} else {
-			return "r_object_id, object_name, title";
+			return "r_object_id, object_name, title, r_content_size";
+		}
+	}
+
+	public static String getContentAsString(IDfSysObject dmDoc) throws DfException {
+		if (dmDoc.getContentSize() > 0) {
+			try (ByteArrayInputStream in = dmDoc.getContent()) {
+				int n = in.available();
+				if (n > 0) {
+					byte[] buff = new byte[n];
+					in.read(buff, 0, n);
+					String str = new String(buff);
+					return str;
+				}
+			} catch (IOException ex) {
+				throw new DfException(ex);
+			}
+		}
+
+		throw new DfException("No content");
+	}
+
+	public static File exportFile(IDfSysObject dmDoc, String destination) throws DfException {
+		IDfExportOperation exportOp = new DfClientX().getExportOperation();
+		exportOp.setDestinationDirectory(destination);
+		IDfExportNode node = (IDfExportNode) exportOp.add(dmDoc);
+
+		boolean result = exportOp.execute();
+		if (!result) {
+			IDfList errors = exportOp.getErrors();
+			DfException ex = null;
+			for (int i = 0; i < errors.getCount(); i++) {
+				IDfOperationError err = (IDfOperationError) errors.get(i);
+				ex = new DfException(err.getMessage(), ex);
+			}
+			throw ex;
+		}
+
+		return new File(node.getFilePath());
+	}
+
+	public static void validatePath(IDfSession dmSession, String path) throws DfException {
+		IDfFolder dmFolder = dmSession.getFolderByPath(path);
+		if (dmFolder == null) {
+			throw new DfException("Path not found: " + path);
 		}
 	}
 }

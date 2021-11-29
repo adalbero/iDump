@@ -5,8 +5,11 @@ import com.documentum.fc.client.IDfClient;
 import com.documentum.fc.client.IDfTypedObject;
 import com.documentum.fc.common.DfException;
 
+import io.adalbero.tool.idump.command.CatCommand;
+import io.adalbero.tool.idump.command.CdCommand;
 import io.adalbero.tool.idump.command.DirCommand;
 import io.adalbero.tool.idump.command.DumpCommand;
+import io.adalbero.tool.idump.command.ExportCommand;
 import io.adalbero.tool.idump.command.HelpCommand;
 import io.adalbero.tool.idump.command.ListCommand;
 import io.adalbero.tool.idump.command.SelectCommand;
@@ -20,9 +23,11 @@ public class AppMain {
 //		new AppMain().test();
 	}
 
-//	private static void test() {
-//		String qualification = "dump user dmadmin".replaceAll("(?i)DUMP ", "");
-//		System.out.println(qualification);
+//	public static void test() {
+//		Path path = Paths.get("/a/b/c");
+//		path = path.resolve("../x");
+//		path = path.normalize();
+//		System.out.println(path);
 //	}
 
 	private void printHeader() {
@@ -73,7 +78,10 @@ public class AppMain {
 		AppCommandFactory.addCommand(DumpCommand.NAME, DumpCommand.class);
 		AppCommandFactory.addCommand(SelectCommand.NAME, SelectCommand.class);
 		AppCommandFactory.addCommand(ListCommand.NAME, ListCommand.class);
+		AppCommandFactory.addCommand(CdCommand.NAME, CdCommand.class);
 		AppCommandFactory.addCommand(DirCommand.NAME, DirCommand.class);
+		AppCommandFactory.addCommand(CatCommand.NAME, CatCommand.class);
+		AppCommandFactory.addCommand(ExportCommand.NAME, ExportCommand.class);
 		AppCommandFactory.addCommand(HelpCommand.NAME, HelpCommand.class);
 		AppCommandFactory.addCommand(ShellCommand.NAME, ShellCommand.class);
 	}

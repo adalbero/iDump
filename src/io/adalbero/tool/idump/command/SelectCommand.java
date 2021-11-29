@@ -4,7 +4,6 @@ import com.documentum.fc.common.DfException;
 
 import io.adalbero.tool.idump.AppCommand;
 import io.adalbero.tool.idump.AppConsole;
-import io.adalbero.tool.idump.util.AppDctmUtil;
 
 public class SelectCommand extends AppCommand {
 

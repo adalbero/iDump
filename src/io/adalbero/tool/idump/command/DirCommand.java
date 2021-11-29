@@ -4,6 +4,8 @@ import com.documentum.fc.common.DfException;
 
 import io.adalbero.tool.idump.AppCommand;
 import io.adalbero.tool.idump.AppConsole;
+import io.adalbero.tool.idump.util.AppDctmUtil;
+import io.adalbero.tool.idump.util.AppStringUtil;
 
 public class DirCommand extends AppCommand {
 
@@ -16,7 +18,7 @@ public class DirCommand extends AppCommand {
 
 	@Override
 	public void printHelp() {
-		AppConsole.printf("  DIR <full_path>");
+		AppConsole.printf("  DIR [<path>]");
 	}
 
 	@Override
@@ -24,18 +26,19 @@ public class DirCommand extends AppCommand {
 		Object result = null;
 
 		String type = "dm_document";
-//		String attributes = AppDctmUtil.getDefaultAttrs(type);
-		String folder = cmdLine.getArgumentTilEnd(1);
+		String attributes = AppDctmUtil.getDefaultAttrs(type);
+		String path = cmdLine.getArgumentTilEnd(1);
 
-		String dql = "";
-		dql += String.format(
-				" SELECT 0 as x, r_object_id, object_name, r_object_type FROM dm_folder WHERE FOLDER('%s')", folder);
-		dql += String.format(" UNION");
-		dql += String.format(" SELECT 1 as x, r_object_id, object_name, title FROM dm_document WHERE FOLDER('%s')",
-				folder);
-		dql += String.format(" ORDER BY 1, 3");
+		String fullPath = AppStringUtil.getFullPath(this.context.pwd, path);
+		AppDctmUtil.validatePath(this.context.dmSession, fullPath);
 
-		result = query(dql);
+		String dqlFolders = String.format(
+				" SELECT r_object_id, object_name, r_object_type FROM dm_folder WHERE FOLDER('%s') ORDER BY object_name",
+				fullPath);
+		String dqlFiles = String.format(" SELECT %s FROM %s WHERE FOLDER('%s') ORDER BY object_name", attributes, type,
+				fullPath);
+
+		result = new Object[] { "DIR " + fullPath, query(dqlFolders), query(dqlFiles) };
 
 		return result;
 	}
