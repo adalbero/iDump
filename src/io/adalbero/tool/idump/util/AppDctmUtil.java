@@ -19,6 +19,7 @@ import com.documentum.fc.common.DfException;
 import com.documentum.fc.common.DfId;
 import com.documentum.fc.common.DfLoginInfo;
 import com.documentum.fc.common.IDfList;
+import com.documentum.fc.tools.RegistryPasswordUtils;
 import com.documentum.operations.IDfExportNode;
 import com.documentum.operations.IDfExportOperation;
 import com.documentum.operations.IDfOperationError;
@@ -176,5 +177,26 @@ public class AppDctmUtil {
 		if (dmFolder == null) {
 			throw new DfException("Path not found: " + path);
 		}
+	}
+	
+	public static String[] registryPassword(String msg) {
+		String decoded = msg;
+		String encoded = msg;
+		String result = msg;
+		
+		try {
+			result = RegistryPasswordUtils.decrypt(msg);
+			decoded = result;
+		} catch (DfException e) {
+			try {
+				result = RegistryPasswordUtils.encrypt(msg);
+				encoded = result;
+			} catch (DfException e2) {
+				decoded = encoded = "error";
+				result = msg;
+			}
+		}
+		
+		return new String[] {decoded, encoded, result};
 	}
 }

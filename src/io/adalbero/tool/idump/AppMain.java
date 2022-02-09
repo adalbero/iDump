@@ -5,8 +5,10 @@ import com.documentum.fc.client.IDfClient;
 import com.documentum.fc.client.IDfTypedObject;
 import com.documentum.fc.common.DfException;
 
+import io.adalbero.tool.idump.command.Base64Command;
 import io.adalbero.tool.idump.command.CatCommand;
 import io.adalbero.tool.idump.command.CdCommand;
+import io.adalbero.tool.idump.command.DecodeCommand;
 import io.adalbero.tool.idump.command.DirCommand;
 import io.adalbero.tool.idump.command.DumpCommand;
 import io.adalbero.tool.idump.command.ExportCommand;
@@ -24,12 +26,15 @@ public class AppMain {
 	}
 
 //	public static void test() {
-//		Path path = Paths.get("/a/b/c");
-//		path = path.resolve("../x");
-//		path = path.normalize();
-//		System.out.println(path);
+//		String result = "";
+//		
+//		result = AppDctmUtil.registryPassword("password");
+//		System.out.println(result);
+//
+//		result = AppDctmUtil.registryPassword("AAAAEKFifJGYNg+PlAgNcDUB1CvAZ9DHHYOhXEWDdLd6jOUI");
+//		System.out.println(result);
 //	}
-
+//
 	private void printHeader() {
 		// https://patorjk.com/software/taag/#p=display&f=Small&t=iDump
 		AppConsole.printf();
@@ -40,8 +45,8 @@ public class AppMain {
 		AppConsole.printf("   / / /_/ / /_/ / / / / / / /_/ /");
 		AppConsole.printf("  /_/_____/\\__,_/_/ /_/ /_/ .___/");
 		AppConsole.printf("                         /_/");
-		AppConsole.printf("  Version 0.0.1                          ");
-		AppConsole.printf("  by Adalbero F. Guimaraes (2021)        ");
+		AppConsole.printf("  Version 0.0.2                          ");
+		AppConsole.printf("  by Adalbero F. Guimaraes (2022)        ");
 		AppConsole.printf("-----------------------------------------");
 		AppConsole.printf("  %s", AppStringUtil.getTimestamp());
 	}
@@ -82,8 +87,10 @@ public class AppMain {
 		AppCommandFactory.addCommand(DirCommand.NAME, DirCommand.class);
 		AppCommandFactory.addCommand(CatCommand.NAME, CatCommand.class);
 		AppCommandFactory.addCommand(ExportCommand.NAME, ExportCommand.class);
-		AppCommandFactory.addCommand(HelpCommand.NAME, HelpCommand.class);
+		AppCommandFactory.addCommand(Base64Command.NAME, Base64Command.class);
+		AppCommandFactory.addCommand(DecodeCommand.NAME, DecodeCommand.class);
 		AppCommandFactory.addCommand(ShellCommand.NAME, ShellCommand.class);
+		AppCommandFactory.addCommand(HelpCommand.NAME, HelpCommand.class);
 	}
 
 	private void printHelp() {

@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -75,5 +76,22 @@ public class AppStringUtil {
 		result = result.replaceAll("\\\\", "/");
 
 		return result;
+	}
+	
+	public static String[] base64(String msg) {
+		String encoded = msg;
+		String decoded = msg;
+		String result = msg;
+		
+		try {
+			byte[] decodedBytes = Base64.getDecoder().decode(msg);
+			result = new String(decodedBytes);
+			decoded = result;
+		} catch (IllegalArgumentException ex) {
+			result = Base64.getEncoder().encodeToString(msg.getBytes());
+			encoded = result;
+		}
+		
+		return new String[] {decoded, encoded, result};
 	}
 }

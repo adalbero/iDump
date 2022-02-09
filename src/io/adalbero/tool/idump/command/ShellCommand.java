@@ -26,7 +26,7 @@ public class ShellCommand extends AppCommand {
 
 	@Override
 	public void printHelp() {
-		AppConsole.printf("  SHELL <repo> <user> <pass> [<command>]");
+		AppConsole.printf("  SHELL <repo|ASK> <user> <pass|ASK> [<command>]");
 	}
 
 	@Override
@@ -117,18 +117,24 @@ public class ShellCommand extends AppCommand {
 		String repo = cmdLine.getArgument(1);
 		if (repo == null) {
 			return null;
+		} else if (AppStringUtil.equals(repo, "ASK")) {
+			String prompt = String.format("Repository?");
+			repo = AppConsole.prompt(prompt);
 		}
 
 		String user = cmdLine.getArgument(2);
 		if (user == null) {
-			user = AppConsole.prompt("User");
+			String prompt = String.format("[@%s] User?", repo);
+			user = AppConsole.prompt(prompt);
 		}
+		
 
 		String pass = cmdLine.getArgument(3);
 		pass = AppStringUtil.equals(pass, "ASK") ? null : pass;
 
 		if (pass == null) {
-			pass = AppConsole.promptPassword("Password");
+			String prompt = String.format("[%s@%s] Password?", user, repo);
+			pass = AppConsole.promptPassword(prompt);
 		}
 
 		AppConsole.printf("Connecting...");
